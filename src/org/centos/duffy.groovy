@@ -9,7 +9,7 @@ def duffy(stage,  duffyOps = '--allocate', duffyKey = 'duffy-key',
     env.DUFFY_OP = "${duffyOps}"
     echo "Currently in stage: ${stage} ${env.DUFFY_OP} resources"
 
-    if (!(fileExists(subDir))) {
+    if (!(new File(subDir).isDirectory())) {
         dir(subDir) {
             git repoUrl
         }
@@ -21,10 +21,10 @@ def duffy(stage,  duffyOps = '--allocate', duffyKey = 'duffy-key',
             sh '''
                     #!/bin/bash
                     set -xeuo pipefail
-            
+
                     cp ${DUFFY_KEY} ~/duffy.key
                     chmod 600 ~/duffy.key
-        
+
                     mkdir -p ${ORIGIN_WORKSPACE}
                     # If we somehow got called without an op, do nothing.
                     if test -z "${DUFFY_OP:-}"; then
